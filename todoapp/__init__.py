@@ -21,8 +21,9 @@ def create_app(test_config=None):
         pass
 
     from . import db
-    from . import models  # 👈 ВАЖНО: импортируй модели до create_all
+    from . import models  # 👈 ВАЖНО: импортируй модели до create_all / миграции
     db.init_app(app)
+
 
     @app.route('/')
     def index():
