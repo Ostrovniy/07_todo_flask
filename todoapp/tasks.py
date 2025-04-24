@@ -12,14 +12,18 @@ tasks_bp = Blueprint('tasks', __name__)
 
 
 # http://127.0.0.1:5000/
-@tasks_bp.route('/', methods=('GET', 'POST'))
+@tasks_bp.route('/', methods=["GET", "POST"])
 def index():
-    return 'Гравная страница сайта, форма добавления задачи и отображения задач'
+    return render_template('index.html')
 
 
 # http://127.0.0.1:5000/tasks/edit/5
-@tasks_bp.route('/tasks/edit/<id>', methods=('GET', 'POST'))
+@tasks_bp.route('/tasks/edit/<id>', methods=["GET", "POST"])
 def edit_tasks(id):
-    return f'Страница для редактирования определенной задачи {id}'
+    return render_template('edit.html')
+
+@tasks_bp.route('/tasks/delete/<id>', methods=["POST"])
+def delete_tasks(id):
+    return 'Удаления задачи'
 
 
