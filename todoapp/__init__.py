@@ -1,9 +1,11 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-import os
 from authlib.integrations.flask_client import OAuth
 from todoapp.error import page_not_found, internal_server_error
+from todoapp.utils import get_ngrok_url
+import logging
+from logging.handlers import RotatingFileHandler
 
 #flask --app todoapp run --debug
 def create_app(test_config=None):
@@ -11,6 +13,8 @@ def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
     oauth = OAuth(app)
+
+    print(get_ngrok_url())
 
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -42,6 +46,22 @@ def create_app(test_config=None):
 
     # штука называеться current_app
     app.google = google
+
+    # ЛОГИРОВАНИЕ
+    if app.debug:
+        # Создаём директорию для логов, если нет
+        os.makedirs("logs", exist_ok=True)
+
+        file_handler = RotatingFileHandler("logs/app.log", maxBytes=10240, backupCount=3, encoding="utf-8")
+        file_handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
+        ))
+        file_handler.setLevel(logging.INFO)
+
+        app.logger.addHandler(file_handler)
+
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("Приложение запущено")
 
     from . import db
     from . import models  # 👈 ВАЖНО: импортируй модели до create_all / миграции

@@ -7,22 +7,28 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
+from . import auth
+
 # auth это имя блю принта
 tasks_bp = Blueprint('tasks', __name__)
 
 
 # http://127.0.0.1:5000/
+# Только для авторизованных
 @tasks_bp.route('/', methods=["GET", "POST"])
+@auth.login_required
 def index():
     return render_template('index.html')
 
 
 # http://127.0.0.1:5000/tasks/edit/5
 @tasks_bp.route('/tasks/edit/<id>', methods=["GET", "POST"])
+@auth.login_required
 def edit_tasks(id):
     return render_template('edit.html')
 
 @tasks_bp.route('/tasks/delete/<id>', methods=["POST"])
+@auth.login_required
 def delete_tasks(id):
     return 'Удаления задачи'
 
