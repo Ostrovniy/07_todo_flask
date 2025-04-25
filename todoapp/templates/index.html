@@ -1,1 +1,24 @@
-<h1>Главная страница</h1>
+<h1>Главная страница: {{g.user.name}}</h1>
+
+<p>Добавить новую задачу</p>
+<form method="POST">
+    {{ addtaskform.hidden_tag() }} 
+    {{ addtaskform.title.label }}  
+    {{ addtaskform.title(size=32) }}
+    <br/><br/>
+    {{ addtaskform.description.label }}  
+    {{ addtaskform.description(size=32) }}
+    <br/><br/>
+    {{ addtaskform.submit() }} 
+</form>
+
+<p>Входящие задачи</p>
+{% for task in tasks %}
+  <li>
+    {{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}
+    <!-- Кнопки -->
+    <a href="#">✏️ Редактировать</a>
+    |
+    <a href="#" onclick="return confirm('Точно удалить?')">🗑️ Удалить</a>
+  </li>
+{% endfor %}

@@ -1,13 +1,8 @@
-# блюпринт для работы с задачами
-
-# Главная страница 
-# Страница редактирования определенной задачи
-
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
-)
-
+from flask import Blueprint, current_app, flash, g, redirect, render_template, request, session, url_for
 from . import auth
+from . import forms
+from . import models
+from . import db
 
 # auth это имя блю принта
 tasks_bp = Blueprint('tasks', __name__)
@@ -18,7 +13,27 @@ tasks_bp = Blueprint('tasks', __name__)
 @tasks_bp.route('/', methods=["GET", "POST"])
 @auth.login_required
 def index():
-    return render_template('index.html')
+    # Создание формы
+    addtaskform = forms.TaskForm()
+
+    if addtaskform.validate_on_submit():
+        # Получения значений формы
+        title = addtaskform.title.data
+        description = addtaskform.description.data
+        current_app.logger.info(f"Форма: добавить задачу, отправка формы {title}, {description}")
+
+        # Добавления новой заадчи в бд
+        new_task = models.Task(
+            title = title,
+            description= description,
+            user=g.user
+        )
+
+        db.db.session.add(new_task)
+        db.db.session.commit()
+        return redirect(url_for('tasks.index'))
+    
+    return render_template('index.html', addtaskform=addtaskform, tasks=g.user.tasks)
 
 
 # http://127.0.0.1:5000/tasks/edit/5
