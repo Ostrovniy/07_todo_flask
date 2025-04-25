@@ -12,13 +12,37 @@
     {{ addtaskform.submit() }} 
 </form>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
+          {{ message }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
 <p>Входящие задачи</p>
-{% for task in tasks %}
-  <li>
-    {{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}
-    <!-- Кнопки -->
-    <a href="#">✏️ Редактировать</a>
-    |
-    <a href="#" onclick="return confirm('Точно удалить?')">🗑️ Удалить</a>
-  </li>
-{% endfor %}
+{% if tasks %}
+  {% for task in tasks %}
+    <li>
+      {{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}
+      <!-- Кнопки -->
+      <form action="{{ url_for('tasks.edit_tasks', id=task.id) }}" method="post" style="display:inline;">
+        <button type="submit">✏️ Редактировать</button>
+      </form>
+      |
+      <form action="{{ url_for('tasks.delete_tasks', id=task.id) }}" method="post" style="display:inline;">
+        <button type="submit" onclick="return confirm('Точно удалить?')">🗑️ Удалить</button>
+      </form>
+    </li>
+  {% endfor %}
+{% else %}
+  <div>
+    <p>У вас нет ни одной задачи, добавьте ее.</p>
+  </div>
+{% endif %}
+

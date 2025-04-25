@@ -1,1 +1,14 @@
 <h1>Страница редактирования задачи</h1>
+<p>редактирования задачи №{{task_id}}</p>
+<form method="POST">
+    {{ addtaskform.hidden_tag() }} 
+    {{ addtaskform.title.label }}  
+    {{ addtaskform.title(size=32) }}
+    <br/><br/>
+    {{ addtaskform.description.label }}  
+    {{ addtaskform.description(size=32) }}
+    <br/>
+    Добавлено: {{ data_add}}
+    <br/><br/>
+    {{ addtaskform.submit() }} 
+</form>

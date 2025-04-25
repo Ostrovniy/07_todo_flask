@@ -40,11 +40,42 @@ def index():
 @tasks_bp.route('/tasks/edit/<id>', methods=["GET", "POST"])
 @auth.login_required
 def edit_tasks(id):
-    return render_template('edit.html')
+    task = models.Task.query.filter_by(id=id, user_id=g.user.id).first()
+
+    # Когда задача не найдена, вернуть на главную страницу
+    if not task:
+        return redirect(url_for('tasks.index'))
+    
+    addtaskform = forms.TaskForm()
+    # Редактирования задачи
+
+    # Обновления задачи в БД
+    if addtaskform.validate_on_submit():
+
+        task.title = addtaskform.title.data
+        task.description = addtaskform.description.data
+        db.db.session.add(task)
+        db.db.session.commit()
+        flash('Данные обновлены', "success")
+        return redirect(url_for('tasks.index'))
+
+    # Отображения формы с данными для редактирования
+    addtaskform.title.data = task.title
+    addtaskform.description.data = task.description 
+    data_add = task.data_add
+
+    return render_template('edit.html', addtaskform=addtaskform, task_id=id, data_add=data_add)
 
 @tasks_bp.route('/tasks/delete/<id>', methods=["POST"])
 @auth.login_required
 def delete_tasks(id):
-    return 'Удаления задачи'
+    task = models.Task.query.filter_by(id=id, user_id=g.user.id).first()
+
+    # Простое удаления, также есть безопасная штука CSRF (пока не разобрался)
+    if task:
+        db.db.session.delete(task)
+        db.db.session.commit()
+        flash('Задача удалена!', "success")
+        return redirect(url_for('tasks.index'))
 
 
