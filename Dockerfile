@@ -20,5 +20,7 @@ ENV FLASK_ENV=production
 # Открываем порт 5000
 EXPOSE 5000
 
-# Команда запуска
-CMD ["flask", "run"]
+# Команда запуска:
+# 1. Обновляем базу данных через миграции
+# 2. Запускаем сервер
+CMD flask db upgrade && flask run
