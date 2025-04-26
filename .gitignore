@@ -23,6 +23,6 @@ Thumbs.db
 
 # Logs
 *.log
+*.sqlite
 
-файлы с расширением .sqlite
 
