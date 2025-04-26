@@ -54,6 +54,7 @@ def edit_tasks(id):
 
         task.title = addtaskform.title.data
         task.description = addtaskform.description.data
+        task.completed = addtaskform.status.data
         db.db.session.add(task)
         db.db.session.commit()
         flash('Данные обновлены', "success")
@@ -62,9 +63,32 @@ def edit_tasks(id):
     # Отображения формы с данными для редактирования
     addtaskform.title.data = task.title
     addtaskform.description.data = task.description 
+    addtaskform.status.data = task.completed 
     data_add = task.data_add
 
     return render_template('edit.html', addtaskform=addtaskform, task_id=id, data_add=data_add)
+
+
+# Если занвания функции и маршрут одинаквый ошибка
+@tasks_bp.route('/tasks/toggle_status/<id>', methods=["POST"])
+@auth.login_required
+def toggle_status_view(id):
+    task = models.Task.query.filter_by(id=id, user_id=g.user.id).first()
+
+    # Когда задача не найдена, вернуть на главную страницу
+    if not task:
+        return redirect(url_for('tasks.index'))
+    
+    # Получаем значение чекбокса из request.form
+    status = 'status' in request.form  # Если чекбокс был выбран, status будет True
+
+    # Обновляем статус задачи
+    task.completed = status  # True если чекбокс выбран, False если нет
+    db.db.session.commit()
+
+    flash('Статус задачи обновлен!', "success")
+    return redirect(url_for('tasks.index'))
+
 
 @tasks_bp.route('/tasks/delete/<id>', methods=["POST"])
 @auth.login_required

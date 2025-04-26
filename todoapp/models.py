@@ -1,7 +1,7 @@
 from datetime import datetime
 from .db import db
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy import Integer, String, ForeignKey, Boolean
 
 # Ипользуем sqlite
 
@@ -23,6 +23,7 @@ class Task(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(255), nullable=True)
+    completed: Mapped[bool] = mapped_column(Boolean(), default=False, nullable=False)
 
     # строка, представляющая дату добавления, формат YYYY-MM-DD HH:MM
     data_add: Mapped[str] = mapped_column(

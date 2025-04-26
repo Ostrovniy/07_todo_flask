@@ -2,6 +2,10 @@
 <p>редактирования задачи №{{task_id}}</p>
 <form method="POST">
     {{ addtaskform.hidden_tag() }} 
+    
+    {{ addtaskform.status.label }} 
+    {{ addtaskform.status() }} 
+    <br/><br/>
     {{ addtaskform.title.label }}  
     {{ addtaskform.title(size=32) }}
     <br/><br/>

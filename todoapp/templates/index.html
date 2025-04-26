@@ -2,7 +2,9 @@
 
 <p>Добавить новую задачу</p>
 <form method="POST">
-    {{ addtaskform.hidden_tag() }} 
+    {{ addtaskform.hidden_tag() }}
+
+    <br/><br/>
     {{ addtaskform.title.label }}  
     {{ addtaskform.title(size=32) }}
     <br/><br/>
@@ -29,7 +31,15 @@
 {% if tasks %}
   {% for task in tasks %}
     <li>
-      {{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}
+      <form action="{{ url_for('tasks.toggle_status_view', id=task.id) }}" method="post" style="display:inline;">
+        <input type="checkbox" name="status" onchange="this.form.submit()" {% if task.completed %}checked{% endif %}>
+      </form>
+      {% if task.completed %}
+        <s>{{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}</s>
+      {% else %}
+        {{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}
+      {% endif %}
+       | 
       <!-- Кнопки -->
       <form action="{{ url_for('tasks.edit_tasks', id=task.id) }}" method="post" style="display:inline;">
         <button type="submit">✏️ Редактировать</button>
