@@ -13,55 +13,68 @@
 
 <body data-bs-theme="light">
   <!--Напка сайта -->
-  <header class="p-2 mb-3 border-bottom ">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none me-4">
-          <!-- Иконка Bootstrap через класс -->
-          <!--<i class="bi bi-github" style="font-size: 20px;"></i>-->
-          <i class="bi bi-feather" style="font-size: 20px;"></i>
+  <header class="mb-3 border-bottom">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+
+        <!-- Логотип -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <i class="bi bi-feather me-2" style="font-size: 20px;"></i>ToDo
 
         </a>
 
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-archive"></i> Входящие</a></li>
-          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-calendar2-day"></i> Сегодня</a></li>
-          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-box-seam"></i> Предстоящие</a></li>
-          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-funnel"></i> Фильтры и метки</a></li>
-        </ul>
+        <!-- Кнопка-бургер -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu"
+          aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-          <input type="search" class="form-control" placeholder="Поиск..." aria-label="Search">
-        </form>
+        <!-- Основное меню -->
+        <div class="collapse navbar-collapse" id="mainMenu">
 
-        <div class="dropdown text-end">
-          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <img src="{{g.user.url_photo}}" alt="mdo" width="32" height="32" class="rounded-circle">
-            <span class="ms-1">{{g.user.name}}</span>
-          </a>
-          <ul class="dropdown-menu text-small" style="">
-            <li class="dropdown-item">
-              <!-- Переключатель темы -->
-              <div class="form-check form-switch">
-                <label for="theme-toggle" class="form-label">Темная тема</label>
-                <input type="checkbox" id="theme-toggle" class="form-check-input" data-bs-theme="auto" role="switch">
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider m-0">
-            </li>
-            <li><a class="dropdown-item" href="#">Новый проект...</a></li>
-            <li><a class="dropdown-item" href="#">Настройки</a></li>
-            <li><a class="dropdown-item" href="#">Профиль</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
-
+          <!-- Навигационные ссылки -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-archive"></i> Входящие</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar2-day"></i> Сегодня</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-box-seam"></i> Предстоящие</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-funnel"></i> Фильтры и метки</a></li>
           </ul>
+
+          <!-- Форма поиска: с отступом снизу на мобильных (mb-3), без отступа на больших экранах (mb-lg-0) -->
+          <form class="d-flex me-3 mb-3 mb-lg-0" role="search">
+            <input class="form-control" type="search" placeholder="Поиск..." aria-label="Search">
+          </form>
+
+
+          <!-- Дропдаун пользователя text-end-->
+          <div class="dropdown">
+            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="{{g.user.url_photo}}" alt="user" width="32" height="32" class="rounded-circle">
+              <span class="ms-1">{{g.user.name}}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-small">
+              <li class="dropdown-item">
+                <div class="form-check form-switch">
+                  <label for="theme-toggle" class="form-label">Темная тема</label>
+                  <input type="checkbox" id="theme-toggle" class="form-check-input" data-bs-theme="auto" role="switch">
+                </div>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#">Новый проект...</a></li>
+              <li><a class="dropdown-item" href="#">Настройки</a></li>
+              <li><a class="dropdown-item" href="#">Профиль</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+    </nav>
   </header>
 
   <div class="container">
@@ -181,7 +194,7 @@
     {% else %}
     <div class="row justify-content-center">
       <div class="col-auto">
-        <div class="card text-center border-0" style="width: 400px;">
+        <div class="card text-center border-0" style="width: 300px;">
           <img src="{{ url_for('static', filename='images/dove.png') }}" class="mx-auto mt-3" alt="Пусто" width="300"
             height="300">
           <div class="card-body">
