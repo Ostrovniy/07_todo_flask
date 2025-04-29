@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, current_app, flash, g, redirect, render_template, request, session, url_for
 from . import auth
 from . import forms
@@ -68,7 +69,7 @@ def edit_tasks(id):
     addtaskform.title.data = task.title
     addtaskform.description.data = task.description 
     addtaskform.status.data = task.completed 
-    data_add = task.data_add
+    data_add = datetime.strptime(task.data_add, "%Y-%m-%d %H:%M")
 
     return render_template('edit.html', addtaskform=addtaskform, task_id=id, data_add=data_add)
 

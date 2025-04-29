@@ -1,18 +1,165 @@
-<h1>Страница редактирования задачи</h1>
-<p>редактирования задачи №{{task_id}}</p>
-<form method="POST">
-    {{ addtaskform.hidden_tag() }} 
-    
-    {{ addtaskform.status.label }} 
-    {{ addtaskform.status() }} 
-    <br/><br/>
-    {{ addtaskform.title.label }}  
-    {{ addtaskform.title(size=32) }}
-    <br/><br/>
-    {{ addtaskform.description.label }}  
-    {{ addtaskform.description(size=32) }}
-    <br/>
-    Добавлено: {{ data_add}}
-    <br/><br/>
-    {{ addtaskform.submit() }} 
-</form>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Task Dove</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body data-bs-theme="light">
+    <!--Напка сайта -->
+    <header class="mb-3 border-bottom">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+
+                <!-- Логотип -->
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <i class="bi bi-feather me-2" style="font-size: 20px;"></i>ToDo
+                </a>
+
+                <!-- Кнопка-бургер -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu"
+                    aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Основное меню -->
+                <div class="collapse navbar-collapse" id="mainMenu">
+
+                    <!-- Навигационные ссылки -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-archive"></i> Входящие</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar2-day"></i>
+                                Сегодня</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-box-seam"></i> Предстоящие</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-funnel"></i> Фильтры и
+                                метки</a></li>
+                    </ul>
+
+                    <!-- Форма поиска: с отступом снизу на мобильных (mb-3), без отступа на больших экранах (mb-lg-0) -->
+                    <form class="d-flex me-3 mb-3 mb-lg-0" role="search">
+                        <input class="form-control" type="search" placeholder="Поиск..." aria-label="Search">
+                    </form>
+
+
+                    <!-- Дропдаун пользователя text-end-->
+                    <div class="dropdown">
+                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{g.user.url_photo}}" alt="user" width="32" height="32" class="rounded-circle">
+                            <span class="ms-1">{{g.user.name}}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end text-small">
+                            <li class="dropdown-item">
+                                <div class="form-check form-switch">
+                                    <label for="theme-toggle" class="form-label">Темная тема</label>
+                                    <input type="checkbox" id="theme-toggle" class="form-check-input"
+                                        data-bs-theme="auto" role="switch">
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Новый проект...</a></li>
+                            <li><a class="dropdown-item" href="#">Настройки</a></li>
+                            <li><a class="dropdown-item" href="#">Профиль</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!--Навигация по сайту -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{url_for('tasks.index')}}">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Редактировать</li>
+            </ol>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="row">
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show"
+                role="alert">
+                <strong>Готово! </strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+
+        <!-- Форма для добавления новых задач -->
+        <div class="row mb-3">
+            <form method="POST" class="border rounded ps-3 pe-3 pt-2 pb-2 shadow-sm ">
+                {{ addtaskform.hidden_tag() }}
+                <h2 class="mb-2 h4">Редактирования задачи № {{task_id}}</h2>
+                <div class="mb-2">
+                    <div class="form-check mb-2">
+                        {{ addtaskform.status(class_='form-check-input', type="checkbox", id="checkDefault") }}
+                        {{ addtaskform.status.label(class_='form-check-label', for="checkDefault") }}
+                    </div>
+
+                    <!--названия задачи-->
+                    {{ addtaskform.title(class_="form-control mb-2", id="add-task-title", placeholder="Название задач
+                    ...") }}
+
+                    <!--Описание-->
+                    <div class="form-floating">
+                        {{ addtaskform.description(class_="form-control mb-2", id="floatingDescription",
+                        placeholder="Описание...",
+                        style="height: 80px") }}
+                        <label for="floatingDescription">Описание</label>
+                    </div>
+
+                    <p>Добавлено: {{ data_add}}</p>
+
+                    <!--Кнопка: добавить задачу-->
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Сохранить
+                        изменения</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+    <script>
+        // Проверка сохраненной темы из localStorage и установка
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-bs-theme', currentTheme);
+
+        if (currentTheme === 'dark') {
+            themeToggle.checked = true;
+        }
+
+        // Обработчик клика для переключателя
+        themeToggle.addEventListener('change', () => {
+            const newTheme = themeToggle.checked ? 'dark' : 'light';
+            document.body.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme); // Сохраняем выбранную тему в localStorage
+        });
+
+        //<h1>Главная страница: {{g.user.name}}</h1>
+    </script>
+
+</body>
+
+</html>
