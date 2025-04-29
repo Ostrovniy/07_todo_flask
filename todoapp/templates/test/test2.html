@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Подключаем иконки -->
+    
+    <title>Bootstrap Example</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body data-bs-theme="light">
+  <!--Напка сайта -->
+  <header class="p-2 mb-3 border-bottom ">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none me-4">
+          <!-- Иконка Bootstrap через класс -->
+          <i class="bi bi-github" style="font-size: 20px;"></i>
+          
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-archive" ></i> Входящие</a></li>
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-calendar2-day"></i> Сегодня</a></li>
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-box-seam"></i> Предстоящие</a></li>
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-funnel"></i> Фильтры и метки</a></li>
+        </ul>
+
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+          <input type="search" class="form-control" placeholder="Поиск..." aria-label="Search">
+        </form>
+
+        <div class="dropdown text-end">
+          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+          </a>
+          <ul class="dropdown-menu text-small" style="">
+          <li class="dropdown-item">
+                <!-- Переключатель темы -->
+                <div class="form-check form-switch">
+                    <label for="theme-toggle" class="form-label">Темная тема</label>
+                    <input type="checkbox" id="theme-toggle" class="form-check-input" data-bs-theme="auto" role="switch">
+                </div>
+            </li>
+
+            <li><hr class="dropdown-divider m-0"></li>
+            <li><a class="dropdown-item" href="#">Новый проект...</a></li>
+            <li><a class="dropdown-item" href="#">Настройки</a></li>
+            <li><a class="dropdown-item" href="#">Профиль</a></li>
+            <li><hr class="dropdown-divider"></li>
+            
+
+            
+            <li><a class="dropdown-item" href="#">Выйти</a></li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+
+  <!--Навигация по сайту -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a href="#">Library</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Data</li>
+  </ol>
+</nav>
+
+
+
+
+
+<!-- Форма для добавления новых задач -->
+<div class="row mb-3">
+<form class="border rounded ps-3 pe-3 pt-2 pb-2 shadow-sm">
+  <h2 class="mb-2 h4">Добавить задачу</h2>
+  <div class="mb-2">
+    <input type="text" class="form-control mb-2" id="add-task-title" placeholder="Название задач ...">
+    <div class="form-floating">
+      <textarea class="form-control mb-2" id="floatingInputGrid" placeholder="Описание ..." style="height: 80px" ></textarea>
+      <label for="floatingInputGrid">Описание</label>
+    </div>
+    <button type="submit" class="btn btn-primary "><i class="bi bi-plus-circle"></i> Добавить задачу</button>
+  </div>
+</form>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <div class="card text-center border-0" style="width: 400px;">
+      <img src="{{ url_for('static', filename='images/dove.png') }}" class="mx-auto mt-3" alt="Пусто" width="300" height="300">
+      <div class="card-body">
+        <h5 class="card-title">Голубь тоскует без дел!</h5>
+        <p class="card-text">У вас пока нет ни одной задачи. Добавьте хотя бы одну — пусть голубь не грустит.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+  </div>
+  <script>
+    // Проверка сохраненной темы из localStorage и установка
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-bs-theme', currentTheme);
+
+    if (currentTheme === 'dark') {
+      themeToggle.checked = true;
+    }
+
+    // Обработчик клика для переключателя
+    themeToggle.addEventListener('change', () => {
+      const newTheme = themeToggle.checked ? 'dark' : 'light';
+      document.body.setAttribute('data-bs-theme', newTheme);
+      localStorage.setItem('theme', newTheme); // Сохраняем выбранную тему в localStorage
+    });
+  </script>
+    
+  </body>
+
+    
+</html>
+

@@ -1,58 +1,230 @@
-<h1>Главная страница: {{g.user.name}}</h1>
+<!doctype html>
+<html lang="en">
 
-<p>Добавить новую задачу</p>
-<form method="POST">
-    {{ addtaskform.hidden_tag() }}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <br/><br/>
-    {{ addtaskform.title.label }}  
-    {{ addtaskform.title(size=32) }}
-    <br/><br/>
-    {{ addtaskform.description.label }}  
-    {{ addtaskform.description(size=32) }}
-    <br/><br/>
-    {{ addtaskform.submit() }} 
-</form>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <title>Task Dove</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</head>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flashes">
-      {% for category, message in messages %}
-        <li class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
-          {{ message }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+<body data-bs-theme="light">
+  <!--Напка сайта -->
+  <header class="p-2 mb-3 border-bottom ">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none me-4">
+          <!-- Иконка Bootstrap через класс -->
+          <!--<i class="bi bi-github" style="font-size: 20px;"></i>-->
+          <i class="bi bi-feather" style="font-size: 20px;"></i>
+
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-archive"></i> Входящие</a></li>
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-calendar2-day"></i> Сегодня</a></li>
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-box-seam"></i> Предстоящие</a></li>
+          <li><a href="#" class="nav-link px-2 link-secondary"><i class="bi bi-funnel"></i> Фильтры и метки</a></li>
+        </ul>
+
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+          <input type="search" class="form-control" placeholder="Поиск..." aria-label="Search">
+        </form>
+
+        <div class="dropdown text-end">
+          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <img src="{{g.user.url_photo}}" alt="mdo" width="32" height="32" class="rounded-circle">
+            <span class="ms-1">{{g.user.name}}</span>
+          </a>
+          <ul class="dropdown-menu text-small" style="">
+            <li class="dropdown-item">
+              <!-- Переключатель темы -->
+              <div class="form-check form-switch">
+                <label for="theme-toggle" class="form-label">Темная тема</label>
+                <input type="checkbox" id="theme-toggle" class="form-check-input" data-bs-theme="auto" role="switch">
+              </div>
+            </li>
+
+            <li>
+              <hr class="dropdown-divider m-0">
+            </li>
+            <li><a class="dropdown-item" href="#">Новый проект...</a></li>
+            <li><a class="dropdown-item" href="#">Настройки</a></li>
+            <li><a class="dropdown-item" href="#">Профиль</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!--Навигация по сайту -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Главная</li>
+        <!--<li class="breadcrumb-item"><a href="#">Library</a></li> -->
+        <!--<li class="breadcrumb-item active" aria-current="page">Data</li> -->
+      </ol>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="row">
+      <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show"
+        role="alert">
+        <strong>Готово! </strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
 
-<p>Входящие задачи</p>
-{% if tasks %}
-  {% for task in tasks %}
-    <li>
-      <form action="{{ url_for('tasks.toggle_status_view', id=task.id) }}" method="post" style="display:inline;">
-        <input type="checkbox" name="status" onchange="this.form.submit()" {% if task.completed %}checked{% endif %}>
+    <!-- Форма для добавления новых задач -->
+    <div class="row mb-3">
+      <form method="POST" class="border rounded ps-3 pe-3 pt-2 pb-2 shadow-sm">
+        {{ addtaskform.hidden_tag() }}
+        <h2 class="mb-2 h4">Добавить задачу</h2>
+        <div class="mb-2">
+          <!--названия задачи-->
+          {{ addtaskform.title(class_="form-control mb-2", id="add-task-title", placeholder="Название задач ...") }}
+
+          <!--Описание-->
+          <div class="form-floating">
+            {{ addtaskform.description(class_="form-control mb-2", id="floatingDescription", placeholder="Описание...",
+            style="height: 80px") }}
+            <label for="floatingDescription">Описание</label>
+          </div>
+
+          <!--Кнопка: добавить задачу-->
+          <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Добавить задачу</button>
+        </div>
       </form>
-      {% if task.completed %}
-        <s>{{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}</s>
-      {% else %}
-        {{ task.id }} | {{ task.title }} | {{ task.description }} | {{ task.data_add }}
-      {% endif %}
-       | 
-      <!-- Кнопки -->
-      <form action="{{ url_for('tasks.edit_tasks', id=task.id) }}" method="post" style="display:inline;">
-        <button type="submit">✏️ Редактировать</button>
-      </form>
-      |
-      <form action="{{ url_for('tasks.delete_tasks', id=task.id) }}" method="post" style="display:inline;">
-        <button type="submit" onclick="return confirm('Точно удалить?')">🗑️ Удалить</button>
-      </form>
-    </li>
-  {% endfor %}
-{% else %}
-  <div>
-    <p>У вас нет ни одной задачи, добавьте ее.</p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    {% if tasks %}
+    {% for task in tasks %}
+
+    <div class="row">
+      <div class="card mb-2 border rounded shadow-sm ">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+
+            <!-- Первая колонка: Галочка -->
+            <div class="me-3">
+              <!-- <input class="form-check-input" type="checkbox" value="" id="taskCheckbox">-->
+              <form action="{{ url_for('tasks.toggle_status_view', id=task.id) }}" method="post"
+                style="display:inline;">
+                <input id="taskCheckbox" class="form-check-input" type="checkbox" name="status"
+                  onchange="this.form.submit()" {% if task.completed %}checked{% endif %}>
+              </form>
+            </div>
+            <!-- Вторая колонка: Название, Описание, Дата -->
+            {% if task.completed %}
+            <div class="flex-grow-1 ms-3">
+              <s>
+                <h5 class="card-title mb-1">{{ task.title }}</h5>
+              </s>
+              <s>
+                <p class="card-text mb-1">{{ task.description }}</p>
+              </s>
+              <s><small class="text-muted">{{ task.data_add }}</small></s>
+            </div>
+            {% else %}
+            <div class="flex-grow-1 ms-3">
+              <h5 class="card-title mb-1">{{ task.title }}</h5>
+              <p class="card-text mb-1">{{ task.description }}</p>
+              <small class="text-muted">{{ task.data_add }}</small>
+            </div>
+
+            {% endif %}
+            <!-- Предпоследняя колонка: Кнопка Редактировать -->
+            <div class="me-2">
+              <form action="{{ url_for('tasks.edit_tasks', id=task.id) }}" method="post" style="display:inline;">
+                <button class="btn btn-sm btn-outline-primary" type="submit"><i class="bi bi-pen"></i>
+                  Редактировать</button>
+              </form>
+            </div>
+
+            <!-- Последняя колонка: Кнопка Удалить -->
+            <div>
+              <form action="{{ url_for('tasks.delete_tasks', id=task.id) }}" method="post" style="display:inline;">
+                <button class="btn btn-sm btn-outline-danger" type="submit"
+                  onclick="return confirm('Точно удалить?')"><i class="bi bi-x-circle"></i> Удалить</button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <div class="card text-center border-0" style="width: 400px;">
+          <img src="{{ url_for('static', filename='images/dove.png') }}" class="mx-auto mt-3" alt="Пусто" width="300"
+            height="300">
+          <div class="card-body">
+            <h5 class="card-title">Голубь тоскует без дел!</h5>
+            <p class="card-text">У вас пока нет ни одной задачи. Добавьте хотя бы одну — пусть голубь не грустит.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+
   </div>
-{% endif %}
+  <script>
+    // Проверка сохраненной темы из localStorage и установка
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-bs-theme', currentTheme);
 
+    if (currentTheme === 'dark') {
+      themeToggle.checked = true;
+    }
+
+    // Обработчик клика для переключателя
+    themeToggle.addEventListener('change', () => {
+      const newTheme = themeToggle.checked ? 'dark' : 'light';
+      document.body.setAttribute('data-bs-theme', newTheme);
+      localStorage.setItem('theme', newTheme); // Сохраняем выбранную тему в localStorage
+    });
+
+    //<h1>Главная страница: {{g.user.name}}</h1>
+  </script>
+
+</body>
+
+
+</html>

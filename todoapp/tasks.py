@@ -7,6 +7,10 @@ from . import db
 # auth это имя блю принта
 tasks_bp = Blueprint('tasks', __name__)
 
+@tasks_bp.route('/test', methods=["GET", "POST"])
+def test():
+    return render_template('test/test2.html')
+
 
 # http://127.0.0.1:5000/
 # Только для авторизованных

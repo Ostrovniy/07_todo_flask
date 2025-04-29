@@ -51,7 +51,7 @@ def google():
     # Получаем базовый домен (например, через ngrok)
     domain = utils.get_ngrok_url()
     # Публичный домен
-    domain = 'https://07todoflask-production.up.railway.app'
+    #domain = 'https://07todoflask-production.up.railway.app'
     redirect_uri = f"{domain}/auth/google/callback"
     
     # Перенаправляем на страницу авторизации Google с передачей nonce
@@ -118,9 +118,9 @@ def load_logged_in_user():
 
     # Добавляем пользователя в глобальную переменную g
     if user_id is None:
-        current_app.logger.info("load_logged_in_user: None")
+        #current_app.logger.info("load_logged_in_user: None")
         g.user = None
     else: 
         g.user = models.Users.query.filter_by(id = user_id).first()
-        current_app.logger.info(f"load_logged_in_user: {g.user}")
+        #current_app.logger.info(f"load_logged_in_user: {g.user}")
 
