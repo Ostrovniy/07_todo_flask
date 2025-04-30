@@ -14,7 +14,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     oauth = OAuth(app)
 
-    print(get_ngrok_url())
+    #print(get_ngrok_url())
 
     app.config.from_mapping(
         SECRET_KEY='dev',

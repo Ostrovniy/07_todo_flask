@@ -25,7 +25,7 @@ def index():
         # Получения значений формы
         title = addtaskform.title.data
         description = addtaskform.description.data
-        current_app.logger.info(f"Форма: добавить задачу, отправка формы {title}, {description}")
+        #current_app.logger.info(f"Форма: добавить задачу, отправка формы {title}, {description}")
 
         # Добавления новой заадчи в бд
         new_task = models.Task(
