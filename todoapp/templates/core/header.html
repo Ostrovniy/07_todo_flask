@@ -1,0 +1,67 @@
+<!--Шапка сайта-->
+<header class="mb-3 border-bottom">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+      <!-- Логотип -->
+      <a class="navbar-brand d-flex align-items-center" href="/"><i class="bi bi-feather me-2"
+          style="font-size: 20px;"></i>ToDo</a>
+
+      <!-- Кнопка-бургер для мобильной версии-->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu"
+        aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Основное меню -->
+      <div class="collapse navbar-collapse" id="mainMenu">
+        <!-- Навигационные ссылки (Пункты меню) -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-archive"></i> Входящие</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar2-day"></i> Сегодня</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-box-seam"></i> Предстоящие</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-funnel"></i> Фильтры и метки</a></li>
+        </ul>
+
+        <!-- Поиск: с отступом снизу на мобильных (mb-3), без отступа на больших экранах (mb-lg-0) -->
+        <form class="d-flex me-3 mb-3 mb-lg-0" role="search">
+          <input class="form-control" type="search" placeholder="Поиск..." aria-label="Search">
+        </form>
+
+        <!-- Иконка пользователя с выпадающим меню text-end-->
+        <div class="dropdown">
+          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <!-- Аватарка пользователя -->
+            <img src="{{g.user.url_photo}}" alt="user" width="32" height="32" class="rounded-circle">
+            <!-- Юрез нейм пользователя -->
+            <span class="ms-1">{{g.user.name}}</span>
+          </a>
+          <!-- Выпадающее меню пользователя -->
+          <ul class="dropdown-menu dropdown-menu-end text-small">
+            <li class="dropdown-item">
+              <!-- Переключатель темы, с сетлой на темную -->
+              <div class="form-check form-switch">
+                <label for="theme-toggle" class="form-label">Темная тема</label>
+                <input type="checkbox" id="theme-toggle" class="form-check-input" data-bs-theme="auto" role="switch">
+              </div>
+            </li>
+            <!-- Линия разделитель пунктов меню -->
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Новый проект...</a></li>
+            <li><a class="dropdown-item" href="#">Настройки</a></li>
+            <li><a class="dropdown-item" href="#">Профиль</a></li>
+            <!-- Линия разделитель пунктов меню -->
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <!-- Кнопка выхода с аккаунта -->
+            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
