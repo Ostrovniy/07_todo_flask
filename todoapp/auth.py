@@ -49,9 +49,9 @@ def google():
     session['nonce'] = nonce
     
     # Получаем базовый домен (например, через ngrok)
-    #domain = utils.get_ngrok_url()
+    domain = utils.get_ngrok_url()
     # Публичный домен
-    domain = 'https://07todoflask-production.up.railway.app'
+    #domain = 'https://07todoflask-production.up.railway.app'
     redirect_uri = f"{domain}/auth/google/callback"
     
     # Перенаправляем на страницу авторизации Google с передачей nonce
